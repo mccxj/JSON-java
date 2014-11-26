@@ -309,27 +309,6 @@ public class XML {
         if ("null".equalsIgnoreCase(string)) {
             return JSONObject.NULL;
         }
-
-// If it might be a number, try converting it, first as a Long, and then as a
-// Double. If that doesn't work, return the string.
-
-        try {
-            char initial = string.charAt(0);
-            if (initial == '-' || (initial >= '0' && initial <= '9')) {
-                Long value = new Long(string);
-                if (value.toString().equals(string)) {
-                    return value;
-                }
-            }
-        }  catch (Exception ignore) {
-            try {
-                Double value = new Double(string);
-                if (value.toString().equals(string)) {
-                    return value;
-                }
-            }  catch (Exception ignoreAlso) {
-            }
-        }
         return string;
     }
 
@@ -409,25 +388,9 @@ public class XML {
                 }
                 string = value instanceof String ? (String)value : null;
 
-// Emit content in body
-
-                if ("content".equals(key)) {
-                    if (value instanceof JSONArray) {
-                        ja = (JSONArray)value;
-                        length = ja.length();
-                        for (i = 0; i < length; i += 1) {
-                            if (i > 0) {
-                                sb.append('\n');
-                            }
-                            sb.append(escape(ja.get(i).toString()));
-                        }
-                    } else {
-                        sb.append(escape(value.toString()));
-                    }
-
 // Emit an array of similar keys
 
-                } else if (value instanceof JSONArray) {
+                if (value instanceof JSONArray) {
                     ja = (JSONArray)value;
                     length = ja.length();
                     for (i = 0; i < length; i += 1) {
